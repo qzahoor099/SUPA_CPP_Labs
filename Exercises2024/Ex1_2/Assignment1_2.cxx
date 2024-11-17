@@ -58,7 +58,8 @@ void printData(const std::vector<std::pair<float, float>>& data, int n) {
     }
 
     n = std::min(n, static_cast<int>(data.size()));
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < 5
+    ; ++i) {
     
         std::cout << "(" << data[i].first << ", " << data[i].second << ")\n";
         std::cout << "Selected " << n << " lines"<<std::endl;
