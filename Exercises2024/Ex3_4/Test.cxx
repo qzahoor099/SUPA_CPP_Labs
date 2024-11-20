@@ -27,7 +27,7 @@ vector<double> readDataFromFile(const string& filename) {
     }
 
     // Read data from the file, limit to 500 points
-    while (file >> value && count < 500) {
+    while (file >> value && count < 400) {
         data.push_back(value);
         count++;
     }

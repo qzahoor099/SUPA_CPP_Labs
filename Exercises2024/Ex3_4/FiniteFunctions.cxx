@@ -57,6 +57,7 @@ double FiniteFunction::invxsquared(double x) {return 1/(1+x*x);};
 double FiniteFunction::callFunction(double x) {return this->invxsquared(x);}; //(overridable)
 
 /*
+
 ###################
 Integration by hand (output needed to normalise function when plotting)
 ###################
