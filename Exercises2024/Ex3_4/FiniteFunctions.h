@@ -46,4 +46,8 @@ public:
   
 public:
   double invxsquared(double x); //The default functional form
+  double normalDistribution(double x); //normal distributions
+  double cauchyLorentzDistribution(double x); //cauchyLorentz Distribution
+  double negativeCrystalBallDistribution(double x); //crystal ball
+
 };

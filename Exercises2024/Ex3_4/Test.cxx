@@ -1,3 +1,5 @@
+//Quratulain 20-November
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -27,7 +29,7 @@ vector<double> readDataFromFile(const string& filename) {
     }
 
     // Read data from the file, limit to 500 points
-    while (file >> value && count < 400) {
+    while (file >> value && count < 20000) {
         data.push_back(value);
         count++;
     }
@@ -46,8 +48,8 @@ vector<double> readDataFromFile(const string& filename) {
 
 int main() {
     // Define the range for the function and output file
-    double range_min = -5.0;
-    double range_max = 5.0;
+    double range_min = -10.0;
+    double range_max = 10.0;
     string output_file = "MysteryPlot";
 
     // Create a FiniteFunction object
@@ -63,7 +65,7 @@ int main() {
     // If the data was successfully read, plot it
     if (!mysteryData.empty()) {
         // Plot the mystery data points
-        func.plotData(mysteryData, 50);  // Use 50 bins for histogram-like plotting
+        func.plotData(mysteryData, 100);  // Use 50 bins for histogram-like plotting
 
         // Generate and save the plot
         Gnuplot gp;

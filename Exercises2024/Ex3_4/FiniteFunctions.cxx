@@ -21,6 +21,7 @@ FiniteFunction::FiniteFunction(double range_min, double range_max, std::string o
   m_RMin = range_min;
   m_RMax = range_max;
   m_Integral = NULL;
+  m_Normalize = NULL;
   this->checkPath(outfile); //Use provided string to name output files
 }
 
@@ -56,7 +57,54 @@ double FiniteFunction::rangeMax() {return m_RMax;};
 double FiniteFunction::invxsquared(double x) {return 1/(1+x*x);};
 double FiniteFunction::callFunction(double x) {return this->invxsquared(x);}; //(overridable)
 
-/*
+
+//defining the normal distribution here
+double FiniteFunction::normalDistribution(double x) {
+    double mean = 0.0;
+    double stddev = 1.0;
+    return (1.0 / (stddev * sqrt(2 * M_PI))) * exp(-0.5 * pow((x - mean) / stddev, 2));
+}
+double FiniteFunction::callFunction(double x) {
+    return this->normalDistribution(x); // Use normal distribution
+}
+// the 2nd custom distribution cauchyLorentzDistribution
+double FiniteFunction::cauchyLorentzDistribution(double x) {
+    double x0 = 0.0; // Location parameter (center)
+    double gamma = 1.0; // Scale parameter (gamma > 0)
+    return (1 / (M_PI * gamma)) * (1 / (1 + pow((x - x0) / gamma, 2)));
+}
+double FiniteFunction::callFunction(double x) {
+    return this->cauchyLorentzDistribution(x); // Use the Cauchy-Lorentz distribution
+}
+//this is the 3rd custom distribution tahts the custom bar 
+double FiniteFunction::negativeCrystalBallDistribution(double x) {
+    double x_bar = 0.0;  // Mean (x_bar)
+    double sigma = 1.0;   // Standard deviation (sigma)
+    double alpha = 1.0;   // Parameter alpha (alpha > 0)
+    double n = 2.0;       // Exponent parameter (n > 1)
+
+    double A = pow(n / fabs(alpha), n) * exp(-0.5 * pow(fabs(alpha), 2));
+    double B = n / fabs(alpha) - fabs(alpha);
+    double C = (n / fabs(alpha)) * (1 / (n - 1)) * exp(-0.5 * pow(fabs(alpha), 2));
+    double D = sqrt(M_PI / 2) * (1 + erf(fabs(alpha) / sqrt(2)));
+
+    double N = 1 / (sigma * (C + D));
+
+    double z = (x - x_bar) / sigma;
+
+    // Piecewise condition for the negative Crystal Ball distribution
+    if (z > -alpha) {
+        return N * exp(-0.5 * pow(z, 2));  // Gaussian part
+    } else {
+        return N * A * pow(B - z, -n);  // Power-law part
+    }
+}
+double FiniteFunction::callFunction(double x) {
+    return this->negativeCrystalBallDistribution(x); // Use Negative Crystal Ball distribution
+}
+
+/**
+
 
 ###################
 Integration by hand (output needed to normalise function when plotting)
@@ -67,12 +115,14 @@ Integration by hand (output needed to normalise function when plotting)
 double FiniteFunction::integrate(int Ndiv) {
   double step = (m_RMax - m_RMin) / Ndiv;
   double m_Integral = 0.0;
+  
 
     // Apply trapezoidal rule
   for (int i = 0; i < Ndiv; ++i) {
       double x1 = m_RMin + i * step;
       double x2 = m_RMin + (i + 1) * step;
       m_Integral += 0.5 * (this->callFunction(x1) + this->callFunction(x2)) * step;
+
   }
 
     return m_Integral;
