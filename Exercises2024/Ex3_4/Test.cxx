@@ -1,4 +1,5 @@
-//Quratulain 20-November
+//Name: Quratulain Zahoor
+//Date: 19-Nov-2024
 
 #include <iostream>
 #include <fstream>
