@@ -156,7 +156,7 @@ std::vector< std::pair<double,double> > FiniteFunction::scanFunction(int Nscan){
   if (m_Integral == NULL) {
     std::cout << "Integral not set, doing it now" << std::endl;
     this->integral(Nscan);
-    std::cout << "integral: " << m_Integral << ", calculated using " << Nscan << " divisions" << std::endl;
+    std::cout << "Integral: " << m_Integral << ", calculated using " << Nscan << " divisions" << std::endl;
   }
   //For each scan point push back the x and y values 
   for (int i = 0; i < Nscan; i++){
