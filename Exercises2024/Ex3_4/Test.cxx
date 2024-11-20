@@ -47,7 +47,7 @@ vector<double> readDataFromFile(const string& filename) {
 }
 
 int main() {
-    // Define the range for the function and output file
+        // Define the range for the function and output file
     double range_min = -10.0;
     double range_max = 10.0;
     string output_file = "MysteryPlot";

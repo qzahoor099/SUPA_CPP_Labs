@@ -21,7 +21,6 @@ FiniteFunction::FiniteFunction(double range_min, double range_max, std::string o
   m_RMin = range_min;
   m_RMax = range_max;
   m_Integral = NULL;
-  m_Normalize = NULL;
   this->checkPath(outfile); //Use provided string to name output files
 }
 
@@ -55,7 +54,7 @@ double FiniteFunction::rangeMax() {return m_RMax;};
 ###################
 */ 
 double FiniteFunction::invxsquared(double x) {return 1/(1+x*x);};
-double FiniteFunction::callFunction(double x) {return this->invxsquared(x);}; //(overridable)
+//double FiniteFunction::callFunction(double x) {return this->invxsquared(x);normalDistribution(x);cauchyLorentzDistribution(x);negativeCrystalBallDistribution(x);}; //(overridable)
 
 
 //defining the normal distribution here
@@ -64,18 +63,18 @@ double FiniteFunction::normalDistribution(double x) {
     double stddev = 1.0;
     return (1.0 / (stddev * sqrt(2 * M_PI))) * exp(-0.5 * pow((x - mean) / stddev, 2));
 }
-double FiniteFunction::callFunction(double x) {
-    return this->normalDistribution(x); // Use normal distribution
-}
+//double FiniteFunction::callFunction(double x) {
+  //  return this->normalDistribution(x); // Use normal distribution
+//}
 // the 2nd custom distribution cauchyLorentzDistribution
 double FiniteFunction::cauchyLorentzDistribution(double x) {
-    double x0 = 0.0; // Location parameter (center)
-    double gamma = 1.0; // Scale parameter (gamma > 0)
+    double x0 = 0.0; 
+    double gamma = 1.0; 
     return (1 / (M_PI * gamma)) * (1 / (1 + pow((x - x0) / gamma, 2)));
 }
-double FiniteFunction::callFunction(double x) {
-    return this->cauchyLorentzDistribution(x); // Use the Cauchy-Lorentz distribution
-}
+//double FiniteFunction::callFunction(double x) {
+  //  return this->cauchyLorentzDistribution(x); // Use the Cauchy-Lorentz distribution
+//}
 //this is the 3rd custom distribution tahts the custom bar 
 double FiniteFunction::negativeCrystalBallDistribution(double x) {
     double x_bar = 0.0;  // Mean (x_bar)
@@ -99,9 +98,15 @@ double FiniteFunction::negativeCrystalBallDistribution(double x) {
         return N * A * pow(B - z, -n);  // Power-law part
     }
 }
+//double FiniteFunction::callFunction(double x) {return this->normalDistribution(x);cauchyLorentzDistribution(x);negativeCrystalBallDistribution(x);}; //(overridable)
+
+//double FiniteFunction::callFunction(double x) {
+  //  return this->negativeCrystalBallDistribution(x); // Use Negative Crystal Ball distribution
+//}
+
 double FiniteFunction::callFunction(double x) {
-    return this->negativeCrystalBallDistribution(x); // Use Negative Crystal Ball distribution
-}
+    return this->invxsquared(x) + normalDistribution(x) + cauchyLorentzDistribution(x) + negativeCrystalBallDistribution(x);
+};
 
 /**
 
@@ -195,10 +200,10 @@ void FiniteFunction::plotData(std::vector<double> &points, int Nbins, bool isdat
   ## The three helper functions below are needed to get the correct format for plotting with gnuplot
   ## In theory you shouldn't have to touch them
   ## However it might be helpful to read through them and understand what they are doing
-  #######################################################################################################
- */
-
-//Scan over range of function using range/Nscan steps (just a hack so we can plot the function)
+ #######################################################################################################
+ 
+*/
+ //Scan over range of function using range/Nscan steps (just a hack so we can plot the function)
 std::vector< std::pair<double,double> > FiniteFunction::scanFunction(int Nscan){
   std::vector< std::pair<double,double> > function_scan;
   double step = (m_RMax - m_RMin)/(double)Nscan;
@@ -299,3 +304,4 @@ void FiniteFunction::generatePlot(Gnuplot &gp){
     gp.send1d(m_samples);
   }
 }
+  
