@@ -10,8 +10,8 @@ using std::filesystem::path;
 
 //Empty constructor
 FiniteFunction::FiniteFunction(){
-  m_RMin = -5.0;
-  m_RMax = 5.0;
+  m_RMin = -10.0;
+  m_RMax = 10.0;
   this->checkPath("DefaultFunction");
   m_Integral = NULL;
 }

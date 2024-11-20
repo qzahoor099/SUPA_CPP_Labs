@@ -25,7 +25,7 @@ public:
   virtual double callFunction(double x); //Call the function with value x (Overridable)
 
   //Protected members can be accessed by child classes but not users
-protected:
+public:
   double m_RMin;
   double m_RMax;
   double m_Integral;
@@ -44,6 +44,6 @@ protected:
   void checkPath(std::string outstring); //Helper function to ensure data and png paths are correct
   void generatePlot(Gnuplot &gp); 
   
-private:
+public:
   double invxsquared(double x); //The default functional form
 };
