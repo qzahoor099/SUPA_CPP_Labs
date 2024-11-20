@@ -6,7 +6,8 @@ int main() {
     std::vector<std::pair<float, float>> data;
     
     // Step 1: Read data from file and print it
-    readData(data);
+    readData("input2D_float.txt", data);
+    //readData(data);
     
     if (data.empty()) {
         std::cerr << "No data found in the file.\n";
@@ -32,7 +33,7 @@ int main() {
     // Step 4: Calculate and print the magnitude of the selected vectors
     for (int i = 0; i < n; ++i) {
         const auto& point = data[i];
-        float magnitude = calculateMagnitude(point.first, point.second);
+        float magnitude = calculateMagnitudes(point.first, point.second);
         std::cout << "Vector: (" << point.first << ", " << point.second << ") -> Magnitude: " << magnitude << "\n";
     }
 

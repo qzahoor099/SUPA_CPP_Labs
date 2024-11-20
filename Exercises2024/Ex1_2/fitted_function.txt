@@ -1,0 +1,2 @@
+Linear Fit: y = 0.126265x + 2.02628
+Chi-Squared/NDF: 2.49235
