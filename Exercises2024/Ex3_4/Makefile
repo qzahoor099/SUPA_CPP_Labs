@@ -1,6 +1,6 @@
 CC=g++ #Name of compiler
 FLAGS=-std=c++20 -w #Compiler flags (the s makes it silent)
-TARGET=Test.cxx #Executable name
+TARGET=Test #Executable name
 OBJECTS=Test.o FiniteFunctions.o
 LIBS=-I ../../GNUplot/ -lboost_iostreams
 
