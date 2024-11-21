@@ -49,22 +49,6 @@ void readData(const std::string& filename, std::vector<std::pair<float, float>>&
     inputFile.close();
 }
 
-// Template function to print data
-//template <typename T>
-//void printData(const T& data, int n) {
-  //  if (n > static_cast<int>(data.size())) {
-    //    std::cerr << "Warning: Requested lines exceed total data points. Showing all available lines.\n";
-     //   n = static_cast<int>(data.size());
-   // }
-
-   // for (int i = 0; i < n; ++i) {
-     //   std::cout << "(" << data[i].first << ", " << data[i].second << ")\n";
-    //}
-//}
-
-// Explicit instantiation for vector of pairs of floats
-//template void printData<std::vector<std::pair<float, float>>>(const std::vector<std::pair<float, float>>& data, int n);
-
 // Function to calculate magnitudes of (x, y) points
 std::vector<float> calculateMagnitudes(const std::vector<std::pair<float, float>>& data) {
     std::vector<float> magnitudes;
@@ -113,7 +97,8 @@ void fitLine(const std::vector<std::pair<float, float>>& data, const std::string
     float c = (sumY - m * sumX) / N;
 
     // Example errors; replace with actual error values if available
-    std::vector<float> errors(data.size(), 1.0); 
+    std::vector<float> errors(data.size(), 1.0);  // Placeholder for error values
+
     double chiSquared = calculateChiSquared(data, m, c, errors);
     double ndf = N - 2;  // Number of degrees of freedom
     double chiSquaredOverNDF = chiSquared / ndf;
@@ -121,11 +106,13 @@ void fitLine(const std::vector<std::pair<float, float>>& data, const std::string
     std::cout << "Linear Fit: y = " << m << "x + " << c << "\n";
     std::cout << "Chi-Squared/NDF: " << chiSquaredOverNDF << "\n";
 
+    // Writing results to file
     std::ofstream outFile(filename);
     if (!outFile.is_open()) {
-        std::cerr << "Error: Could not open file for writing.\n";
+        std::cerr << "Error: Could not open file '" << filename << "' for writing.\n";
         return;
     }
+
     outFile << "Linear Fit: y = " << m << "x + " << c << "\n";
     outFile << "Chi-Squared/NDF: " << chiSquaredOverNDF << "\n";
     outFile.close();
@@ -135,18 +122,16 @@ void fitLine(const std::vector<std::pair<float, float>>& data, const std::string
 
 // Function to calculate χ² for the fit
 double calculateChiSquared(const std::vector<std::pair<float, float>>& data, double m, double c, const std::vector<float>& errors) {
-    double chiSquared = 0;
+    double chiSquared = 0.0;
     for (size_t i = 0; i < data.size(); ++i) {
-        double yModel = m * data[i].first + c;
-        double residual = (data[i].second - yModel) / errors[i];
-        chiSquared += residual * residual;
+        double yModel = m * data[i].first + c;  // Calculate model value for current x
+        double residual = (data[i].second - yModel) / errors[i];  // Normalize residual by error
+        chiSquared += residual * residual;  // Sum squared residuals
     }
     return chiSquared;
 }
 
 // Function to calculate x^y for each data point
-//void calculatePower(const std::vector<std::pair<float, float>>& data, const std::string& filename);
-
 void calculatePower(const std::vector<std::pair<float, float>>& data, const std::string& filename) {
     std::ofstream outFile(filename);
     if (!outFile.is_open()) {
@@ -164,3 +149,4 @@ void calculatePower(const std::vector<std::pair<float, float>>& data, const std:
     outFile.close();
     std::cout << "x^y results saved to " << filename << "\n";
 }
+

@@ -1,6 +1,13 @@
 #include <iostream>
 #include <vector>
 #include "CustomFunctions.h"
+std::vector<float> errors;
+std::string error2D_float = "error2D_float.txt";  // Replace with your file path
+
+std::vector<std::pair<float, float>> data;  // Populate this with actual data
+float m = 0.0;  // Slope
+float c = 0.0;  // Intercept
+
 
 int main() {
     std::vector<std::pair<float, float>> data;
