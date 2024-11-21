@@ -18,7 +18,7 @@ vector<double> readDataFromFile(const string& filename) {
 
     // Check if the file exists in the current directory
     if (!std::filesystem::exists(filename)) {
-        cout << "Error: File '" << filename << "' does not exist in the current directory." << endl;
+        cout << "Error reported: File '" << filename << "' does not exist in the current directory." << endl;
         return data;  // Return an empty vector as a signal of failure
     }
 
@@ -30,7 +30,7 @@ vector<double> readDataFromFile(const string& filename) {
     }
 
     // Read data from the file, limit to 500 points
-    while (file >> value && count < 20000) {
+    while (file >> value && count < 100000) {
         data.push_back(value);
         count++;
     }
@@ -49,8 +49,8 @@ vector<double> readDataFromFile(const string& filename) {
 
 int main() {
         // Define the range for the function and output file
-    double range_min = -10.0;
-    double range_max = 10.0;
+    double range_min = -20.0;
+    double range_max = 20.0;
     string output_file = "MysteryPlot";
 
     // Create a FiniteFunction object
@@ -66,13 +66,8 @@ int main() {
     // If the data was successfully read, plot it
     if (!mysteryData.empty()) {
         // Plot the mystery data points
-        func.plotData(mysteryData, 100);  // Use 50 bins for histogram-like plotting
-
-        // Generate and save the plot
-        Gnuplot gp;
-        func.generatePlot(gp);
-    } else {
-        cout << "Error: No valid data to plot." << endl;
+        func.plotData(mysteryData, 150);  // Use 50 bins for histogram-like plotting
+    
     }
 
     return 0;

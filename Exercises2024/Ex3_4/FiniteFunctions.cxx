@@ -63,9 +63,7 @@ double FiniteFunction::normalDistribution(double x) {
     double stddev = 1.0;
     return (1.0 / (stddev * sqrt(2 * M_PI))) * exp(-0.5 * pow((x - mean) / stddev, 2));
 }
-//double FiniteFunction::callFunction(double x) {
-  //  return this->normalDistribution(x); // Use normal distribution
-//}
+
 // the 2nd custom distribution cauchyLorentzDistribution
 double FiniteFunction::cauchyLorentzDistribution(double x) {
     double x0 = 0.0; 
@@ -98,11 +96,7 @@ double FiniteFunction::negativeCrystalBallDistribution(double x) {
         return N * A * pow(B - z, -n);  // Power-law part
     }
 }
-//double FiniteFunction::callFunction(double x) {return this->normalDistribution(x);cauchyLorentzDistribution(x);negativeCrystalBallDistribution(x);}; //(overridable)
 
-//double FiniteFunction::callFunction(double x) {
-  //  return this->negativeCrystalBallDistribution(x); // Use Negative Crystal Ball distribution
-//}
 
 double FiniteFunction::callFunction(double x) {
     return this->invxsquared(x) + normalDistribution(x) + cauchyLorentzDistribution(x) + negativeCrystalBallDistribution(x);
@@ -132,6 +126,17 @@ double FiniteFunction::integrate(int Ndiv) {
 
     return m_Integral;
 }
+void FiniteFunction::normalize(int Ndiv) {
+    m_Integral = this->integrate(Ndiv); // Compute the integral
+    if (m_Integral != 0.0) {
+        m_NormalizationFactor = 1.0 / m_Integral; // Correctly use m_Integral here
+    } else {
+        std::cerr << "Error: Integral is zero, cannot normalize the function!" << std::endl;
+    }
+}
+
+
+
   //setting the integral limits here 
 //}
 double FiniteFunction::integral(int Ndiv) { //public

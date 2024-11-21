@@ -23,12 +23,16 @@ public:
   void plotData(std::vector<double> &points, int NBins, bool isdata=true); //NB! use isdata flag to pick between data and sampled distributions
   virtual void printInfo(); //Dump parameter info about the current function (Overridable)
   virtual double callFunction(double x); //Call the function with value x (Overridable)
-
+ void normalize(int Ndiv); // Declare the normalize method
   //Protected members can be accessed by child classes but not users
 public:
   double m_RMin;
   double m_RMax;
   double m_Integral;
+  double m_NormalizationFactor = 1.0;
+ // void normalize(int Ndiv); // Declare the normalize method
+
+  //double  m_NormalizationFactor;
   int m_IntDiv = 0; //Number of division for performing integral
   std::string m_FunctionName;
   std::string m_OutData; //Output filename for data
