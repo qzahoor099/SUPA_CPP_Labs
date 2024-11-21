@@ -1,3 +1,8 @@
+/* Quratulain Zahoor: 19 Nov
+*/
+
+//this is my .cxx file to define the processing for other file, defining function and other stuff
+//includes the packages
 #include "CustomFunctions.h"
 #include <iostream>
 #include <sstream>
@@ -8,7 +13,7 @@
 #include <iomanip>
 #include <limits>
 
-// Function to read data into the vector
+// function to read the data into the vector 
 void readData(const std::string& filename, std::vector<std::pair<float, float>>& data) {
     std::ifstream inputFile(filename);
     if (!inputFile.is_open()) {
@@ -16,11 +21,11 @@ void readData(const std::string& filename, std::vector<std::pair<float, float>>&
         return;
     }
     std::string line;
-    bool isHeader = true; // Skip the header
+    bool isHeader = true; // skip the header to avoid any problem later
 
     while (std::getline(inputFile, line)) {
         if (isHeader) {
-            isHeader = false; // Skip the first line
+            isHeader = false; 
             continue;
         }
 
@@ -31,7 +36,7 @@ void readData(const std::string& filename, std::vector<std::pair<float, float>>&
             try {
                 float x = std::stof(xStr);
                 float y = std::stof(yStr);
-                data.emplace_back(x, y); // Add parsed pair to the vector
+                data.emplace_back(x, y); // adding prased pair to the vector 
             } catch (const std::exception&) {
                 std::cerr << "Warning: Skipping invalid line: " << line << "\n";
             }
@@ -46,10 +51,11 @@ void readData(const std::string& filename, std::vector<std::pair<float, float>>&
         std::cout << "Successfully read " << data.size() << " data points from '" << filename << "'.\n";
     }
 
-    inputFile.close();
+    inputFile.close(); //data file has been closed 
 }
 
-// Function to calculate magnitudes of (x, y) points
+
+// defining the function to calculate the magnitude m = sqrt(a^2=b^2)
 std::vector<float> calculateMagnitudes(const std::vector<std::pair<float, float>>& data) {
     std::vector<float> magnitudes;
     for (const auto& point : data) {
@@ -59,8 +65,13 @@ std::vector<float> calculateMagnitudes(const std::vector<std::pair<float, float>
     std::cout << "Calculated magnitudes for " << data.size() << " points.\n";
     return magnitudes;
 }
-
-// Function to write magnitudes to a file
+//print the magnitude
+void printMagnitude(const std::vector<float>& magnitudes) {
+    for (const auto& magnitude : magnitudes) {
+        std::cout << magnitude << std::endl;
+    }
+}
+// writing the magnitude to the file
 void writeToFile(const std::string& filename, const std::vector<float>& magnitudes) {
     std::ofstream outFile(filename);
     if (!outFile.is_open()) {
@@ -96,8 +107,8 @@ void fitLine(const std::vector<std::pair<float, float>>& data, const std::string
     float m = (N * sumXY - sumX * sumY) / (N * sumX2 - sumX * sumX);
     float c = (sumY - m * sumX) / N;
 
-    // Example errors; replace with actual error values if available
-    std::vector<float> errors(data.size(), 1.0);  // Placeholder for error values
+    // using the error file defined inside the AnalyseData.cxx , calculating the chi 
+    std::vector<float> errors(data.size(), 1.0);  
 
     double chiSquared = calculateChiSquared(data, m, c, errors);
     double ndf = N - 2;  // Number of degrees of freedom
@@ -106,21 +117,21 @@ void fitLine(const std::vector<std::pair<float, float>>& data, const std::string
     std::cout << "Linear Fit: y = " << m << "x + " << c << "\n";
     std::cout << "Chi-Squared/NDF: " << chiSquaredOverNDF << "\n";
 
-    // Writing results to file
+    // writing the results to the file
     std::ofstream outFile(filename);
     if (!outFile.is_open()) {
         std::cerr << "Error: Could not open file '" << filename << "' for writing.\n";
         return;
     }
 
-    outFile << "Linear Fit: y = " << m << "x + " << c << "\n";
-    outFile << "Chi-Squared/NDF: " << chiSquaredOverNDF << "\n";
+    outFile << "Linear Fit: y = " << m << "x + " << c << "\n"; //writing values in the files
+    outFile << "Chi-Squared/NDF: " << chiSquaredOverNDF << "\n"; //same logic 
     outFile.close();
 
     std::cout << "Fit function and chi-squared saved to " << filename << "\n";
 }
 
-// Function to calculate χ² for the fit
+// calculating the chi squared
 double calculateChiSquared(const std::vector<std::pair<float, float>>& data, double m, double c, const std::vector<float>& errors) {
     double chiSquared = 0.0;
     for (size_t i = 0; i < data.size(); ++i) {
@@ -131,7 +142,7 @@ double calculateChiSquared(const std::vector<std::pair<float, float>>& data, dou
     return chiSquared;
 }
 
-// Function to calculate x^y for each data point
+// calculating x^y
 void calculatePower(const std::vector<std::pair<float, float>>& data, const std::string& filename) {
     std::ofstream outFile(filename);
     if (!outFile.is_open()) {
@@ -149,4 +160,6 @@ void calculatePower(const std::vector<std::pair<float, float>>& data, const std:
     outFile.close();
     std::cout << "x^y results saved to " << filename << "\n";
 }
-
+// you can see my outfile in my folder, for easiness i have defines my Makefile
+//do the make
+//now you have the filename.txt (for the differnt option you want to calculate)

@@ -1,3 +1,5 @@
+#this is my makefile, the target is AnalyseData , after doing make , write ./AnalyseData
+
 CXX = g++
 CXXFLAGS = -std=c++20
 
@@ -17,4 +19,5 @@ $(TARGET): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -c $<
 
 clean:
-	rm -f $(OBJECTS) $(TARGET)
+	rm -f $(OBJECTS) $(TARGET)  
+	
