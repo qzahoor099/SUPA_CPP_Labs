@@ -8,7 +8,7 @@
 
 using std::filesystem::path;
 
-//Empty constructor
+// Empty constructor
 FiniteFunction::FiniteFunction(){
   m_RMin = -10.0;
   m_RMax = 10.0;
@@ -16,7 +16,7 @@ FiniteFunction::FiniteFunction(){
   m_Integral = NULL;
 }
 
-//initialised constructor
+// Initialised constructor
 FiniteFunction::FiniteFunction(double range_min, double range_max, std::string outfile){
   m_RMin = range_min;
   m_RMax = range_max;
@@ -24,8 +24,7 @@ FiniteFunction::FiniteFunction(double range_min, double range_max, std::string o
   this->checkPath(outfile); //Use provided string to name output files
 }
 
-//Plots are called in the destructor
-//SUPACPP note: They syntax of the plotting code is not part of the course
+// Plots are called in the destructor
 FiniteFunction::~FiniteFunction(){
   Gnuplot gp; //Set up gnuplot object
   this->generatePlot(gp); //Generate the plot and save it to a png using "outfile" for naming 
@@ -34,7 +33,7 @@ FiniteFunction::~FiniteFunction(){
 /*
 ###################
 //Setters
-###################
+################### 
 */ 
 void FiniteFunction::setRangeMin(double RMin) {m_RMin = RMin;};
 void FiniteFunction::setRangeMax(double RMax) {m_RMax = RMax;};
@@ -43,7 +42,7 @@ void FiniteFunction::setOutfile(std::string Outfile) {this->checkPath(Outfile);}
 /*
 ###################
 //Getters
-###################
+################### 
 */ 
 double FiniteFunction::rangeMin() {return m_RMin;};
 double FiniteFunction::rangeMax() {return m_RMax;};
@@ -51,81 +50,78 @@ double FiniteFunction::rangeMax() {return m_RMax;};
 /*
 ###################
 //Function eval
-###################
+################### 
 */ 
-double FiniteFunction::invxsquared(double x) {return 1/(1+x*x);};
-//double FiniteFunction::callFunction(double x) {return this->invxsquared(x);normalDistribution(x);cauchyLorentzDistribution(x);negativeCrystalBallDistribution(x);}; //(overridable)
 
 
-//defining the normal distribution here
-double FiniteFunction::normalDistribution(double x) {
-    double mean = 0.0;
-    double stddev = 1.0;
-    return (1.0 / (stddev * sqrt(2 * M_PI))) * exp(-0.5 * pow((x - mean) / stddev, 2));
-}
-
-// the 2nd custom distribution cauchyLorentzDistribution
-double FiniteFunction::cauchyLorentzDistribution(double x) {
-    double x0 = 0.0; 
-    double gamma = 1.0; 
-    return (1 / (M_PI * gamma)) * (1 / (1 + pow((x - x0) / gamma, 2)));
-}
-//double FiniteFunction::callFunction(double x) {
-  //  return this->cauchyLorentzDistribution(x); // Use the Cauchy-Lorentz distribution
-//}
-//this is the 3rd custom distribution tahts the custom bar 
-double FiniteFunction::negativeCrystalBallDistribution(double x) {
-    double x_bar = 0.0;  // Mean (x_bar)
-    double sigma = 1.0;   // Standard deviation (sigma)
-    double alpha = 1.0;   // Parameter alpha (alpha > 0)
-    double n = 2.0;       // Exponent parameter (n > 1)
-
-    double A = pow(n / fabs(alpha), n) * exp(-0.5 * pow(fabs(alpha), 2));
-    double B = n / fabs(alpha) - fabs(alpha);
-    double C = (n / fabs(alpha)) * (1 / (n - 1)) * exp(-0.5 * pow(fabs(alpha), 2));
-    double D = sqrt(M_PI / 2) * (1 + erf(fabs(alpha) / sqrt(2)));
-
-    double N = 1 / (sigma * (C + D));
-
-    double z = (x - x_bar) / sigma;
-
-    // Piecewise condition for the negative Crystal Ball distribution
-    if (z > -alpha) {
-        return N * exp(-0.5 * pow(z, 2));  // Gaussian part
-    } else {
-        return N * A * pow(B - z, -n);  // Power-law part
+// Derived class NormalDistribution
+class NormalDistribution : public FiniteFunction {
+private:
+    double m_mean, m_sigma;
+public:
+    NormalDistribution(double mean, double sigma) : m_mean(mean), m_sigma(sigma) {}
+    double evaluate(double x) const override {
+        return (1.0 / (m_sigma * sqrt(2 * M_PI))) * exp(-0.5 * pow((x - m_mean) / m_sigma, 2));
     }
-}
-
-
-double FiniteFunction::callFunction(double x) {
-    return this->invxsquared(x) + normalDistribution(x) + cauchyLorentzDistribution(x) + negativeCrystalBallDistribution(x);
 };
 
-/**
+// Derived class CauchyLorentzDistribution
+class CauchyLorentzDistribution : public FiniteFunction {
+private:
+    double m_x0, m_gamma;
+public:
+    CauchyLorentzDistribution(double x0, double gamma) : m_x0(x0), m_gamma(gamma) {}
+    double evaluate(double x) const override {
+        return (1.0 / M_PI) * (m_gamma / ((x - m_x0) * (x - m_x0) + m_gamma * m_gamma));
+    }
+};
+
+// Derived class NegativeCrystalBallDistribution
+class NegativeCrystalBallDistribution : public FiniteFunction {
+private:
+    double m_mean, m_sigma, m_alpha, m_n;
+public:
+    NegativeCrystalBallDistribution(double mean, double sigma, double alpha, double n)
+        : m_mean(mean), m_sigma(sigma), m_alpha(alpha), m_n(n) {}
+    double evaluate(double x) const override {
+        double a = (x - m_mean) / m_sigma;
+        double abs_a = std::abs(a);
+        if (abs_a < m_alpha) {
+            return exp(-0.5 * a * a);  // Gaussian part
+        } else {
+            double b = m_n / m_alpha;
+            return b * pow(m_alpha / abs_a, m_n) * exp(-0.5 * m_alpha * m_alpha);
+        }
+    }
+};
+
+// Function to call evaluate on any FiniteFunction derived object
+double callFunction(FiniteFunction* func, double x) {
+    return func->evaluate(x);  // Call the correct evaluate method based on the actual object type
+}
 
 
+
+/*
 ###################
-Integration by hand (output needed to normalise function when plotting)
-###################
+//Integration by hand (output needed to normalise function when plotting)
+################### 
 */ 
-//double FiniteFunction::integrate(int Ndiv){ //private
-  
+void double evaluate(double x) const = 0; 
 double FiniteFunction::integrate(int Ndiv) {
   double step = (m_RMax - m_RMin) / Ndiv;
   double m_Integral = 0.0;
-  
 
     // Apply trapezoidal rule
   for (int i = 0; i < Ndiv; ++i) {
       double x1 = m_RMin + i * step;
       double x2 = m_RMin + (i + 1) * step;
       m_Integral += 0.5 * (this->callFunction(x1) + this->callFunction(x2)) * step;
-
   }
 
     return m_Integral;
 }
+
 void FiniteFunction::normalize(int Ndiv) {
     m_Integral = this->integrate(Ndiv); // Compute the integral
     if (m_Integral != 0.0) {
@@ -135,10 +131,6 @@ void FiniteFunction::normalize(int Ndiv) {
     }
 }
 
-
-
-  //setting the integral limits here 
-//}
 double FiniteFunction::integral(int Ndiv) { //public
   if (Ndiv <= 0){
     std::cout << "Invalid number of divisions for integral, setting Ndiv to 1000" <<std::endl;
@@ -155,8 +147,9 @@ double FiniteFunction::integral(int Ndiv) { //public
 /*
 ###################
 //Helper functions 
-###################
+################### 
 */
+
 // Generate paths from user defined stem
 void FiniteFunction::checkPath(std::string outfile){
  path fp = outfile;
@@ -176,17 +169,14 @@ void FiniteFunction::printInfo(){
 /*
 ###################
 //Plotting
-###################
+################### 
 */
 
-//Hack because gnuplot-io can't read in custom functions, just scan over function and connect points with a line... 
 void FiniteFunction::plotFunction(){
   m_function_scan = this->scanFunction(10000);
   m_plotfunction = true;
 }
 
-//Transform data points into a format gnuplot can use (histogram) and set flag to enable drawing of data to output plot
-//set isdata to true (default) to plot data points in black, set to false to plot sample points in blue
 void FiniteFunction::plotData(std::vector<double> &points, int Nbins, bool isdata){
   if (isdata){
     m_data = this->makeHist(points,Nbins);
@@ -198,28 +188,25 @@ void FiniteFunction::plotData(std::vector<double> &points, int Nbins, bool isdat
   }
 }
 
-
 /*
   #######################################################################################################
   ## SUPACPP Note:
   ## The three helper functions below are needed to get the correct format for plotting with gnuplot
   ## In theory you shouldn't have to touch them
   ## However it might be helpful to read through them and understand what they are doing
- #######################################################################################################
- 
+ ####################################################################################################### 
 */
- //Scan over range of function using range/Nscan steps (just a hack so we can plot the function)
+
 std::vector< std::pair<double,double> > FiniteFunction::scanFunction(int Nscan){
   std::vector< std::pair<double,double> > function_scan;
   double step = (m_RMax - m_RMin)/(double)Nscan;
   double x = m_RMin;
-  //We use the integral to normalise the function points
+  // We use the integral to normalize the function points
   if (m_Integral == NULL) {
     std::cout << "Integral not set, doing it now" << std::endl;
     this->integral(Nscan);
     std::cout << "Integral: " << m_Integral << ", calculated using " << Nscan << " divisions" << std::endl;
   }
-  //For each scan point push back the x and y values 
   for (int i = 0; i < Nscan; i++){
     function_scan.push_back( std::make_pair(x,this->callFunction(x)/m_Integral));
     x += step;
@@ -227,108 +214,39 @@ std::vector< std::pair<double,double> > FiniteFunction::scanFunction(int Nscan){
   return function_scan;
 }
 
-//Function to make histogram out of sampled x-values - use for input data and sampling
 std::vector< std::pair<double,double> > FiniteFunction::makeHist(std::vector<double> &points, int Nbins){
-
-  std::vector< std::pair<double,double> > histdata; //Plottable output shape: (midpoint,frequency)
-  std::vector<int> bins(Nbins,0); //vector of Nbins ints with default value 0 
+  std::vector< std::pair<double,double> > histdata;
+  std::vector<int> bins(Nbins,0);
   int norm = 0;
   for (double point : points){
-    //Get bin index (starting from 0) the point falls into using point value, range, and Nbins
     int bindex = static_cast<int>(floor((point-m_RMin)/((m_RMax-m_RMin)/(double)Nbins)));
     if (bindex<0 || bindex>Nbins){
       continue;
     }
-    bins[bindex]++; //weight of 1 for each data point
-    norm++; //Total number of data points
+    bins[bindex]++;
+    norm++;
   }
   double binwidth = (m_RMax-m_RMin)/(double)Nbins;
   for (int i=0; i<Nbins; i++){
-    double midpoint = m_RMin + i*binwidth + binwidth/2; //Just put markers at the midpoint rather than drawing bars
-    double normdata = bins[i]/((double)norm*binwidth); //Normalise with N = 1/(Ndata*binwidth)
+    double midpoint = m_RMin + i*binwidth + binwidth/2;
+    double normdata = bins[i]/((double)norm*binwidth);
     histdata.push_back(std::make_pair(midpoint,normdata));
   }
   return histdata;
 }
 
-//Function which handles generating the gnuplot output, called in destructor
-//If an m_plot... flag is set, the we must have filled the related data vector
-//SUPACPP note: They syntax of the plotting code is not part of the course
 void FiniteFunction::generatePlot(Gnuplot &gp){
-
   if (m_plotfunction==true && m_plotdatapoints==true && m_plotsamplepoints==true){
     gp << "set terminal pngcairo\n";
     gp << "set output 'Outputs/png/"<<m_FunctionName<<".png'\n"; 
     gp << "set xrange ["<<m_RMin<<":"<<m_RMax<<"]\n";
-    gp << "set style line 1 lt 1 lw 2 pi 1 ps 0\n";
-    gp << "plot '-' with linespoints ls 1 title '"<<m_FunctionName<<"', '-' with points ps 2 lc rgb 'blue' title 'sampled data', '-' with points ps 1 lc rgb 'black' pt 7 title 'data'\n";
-    gp.send1d(m_function_scan);
-    gp.send1d(m_samples);
-    gp.send1d(m_data);
-  }
-  
-  else if (m_plotfunction==true && m_plotdatapoints==true){
-    gp << "set terminal pngcairo\n";
-    gp << "set output 'Outputs/png/"<<m_FunctionName<<".png'\n"; 
-    gp << "set xrange ["<<m_RMin<<":"<<m_RMax<<"]\n";
-    gp << "set style line 1 lt 1 lw 2 pi 1 ps 0\n";
-    gp << "plot '-' with linespoints ls 1 title '"<<m_FunctionName<<"', '-' with points ps 1 lc rgb 'black' pt 7 title 'data'\n";
-    gp.send1d(m_function_scan);
-    gp.send1d(m_data);
-  }
-  else if (m_plotfunction==true && m_plotsamplepoints==true){
-    gp << "set terminal pngcairo\n";
-    gp << "set output 'Outputs/png/"<<m_FunctionName<<".png'\n"; 
-    gp << "set xrange ["<<m_RMin<<":"<<m_RMax<<"]\n";
-    gp << "set style line 1 lt 1 lw 2 pi 1 ps 0\n";
-    gp << "plot '-' with linespoints ls 1 title '"<<m_FunctionName<<"', '-' with points ps 2 lc rgb 'blue' title 'sampled data'\n";
-    gp.send1d(m_function_scan);
-    gp.send1d(m_samples);
-  }
-  else if (m_plotfunction==true){
-    gp << "set terminal pngcairo\n";
-    gp << "set output 'Outputs/png/"<<m_FunctionName<<".png'\n"; 
-    gp << "set xrange ["<<m_RMin<<":"<<m_RMax<<"]\n";
-    gp << "set style line 1 lt 1 lw 2 pi 1 ps 0\n";
-    gp << "plot '-' with linespoints ls 1 title 'function'\n";
-    gp.send1d(m_function_scan);
-  }
+    gp << "set xlabel 'X-axis'\n";
+    gp << "set ylabel 'Y-axis'\n";
+    gp << "plot '-' with lines title 'Function " << m_FunctionName << "' , '-' with points title 'Data points', '-' with points title 'Sample points'\n";
 
-  else if (m_plotdatapoints == true){
-    gp << "set terminal pngcairo\n";
-    gp << "set output 'Outputs/png/"<<m_FunctionName<<".png'\n"; 
-    gp << "set xrange ["<<m_RMin<<":"<<m_RMax<<"]\n";
-    gp << "plot '-' with points ps 1 lc rgb 'black' pt 7 title 'data'\n";
-    gp.send1d(m_data);
-  }
-
-  else if (m_plotsamplepoints == true){
-    gp << "set terminal pngcairo\n";
-    gp << "set output 'Outputs/png/"<<m_FunctionName<<".png'\n"; 
-    gp << "set xrange ["<<m_RMin<<":"<<m_RMax<<"]\n";
-    gp << "plot '-' with points ps 2 lc rgb 'blue' title 'sampled data'\n";
-    gp.send1d(m_samples);
-  }
-  else if (m_plotfunction == true) {
-    gp << "set terminal pngcairo\n";
-    gp << "set output 'Outputs/png/" << m_FunctionName << "_separate.png'\n";
-    gp << "set xrange [" << m_RMin << ":" << m_RMax << "]\n";
-    gp << "set style line 1 lt 1 lw 2 pi 1 ps 0\n";
-    gp << "set title 'Separate Distributions'\n";
-
-    // Plot each distribution separately
-    gp << "plot '-' with lines ls 1 title 'invxsquared', "
-       "'-' with lines ls 2 title 'Normal Distribution', "
-       "'-' with lines ls 3 title 'Cauchy-Lorentz', "
-       "'-' with lines ls 4 title 'Negative Crystal Ball'\n";
-
-    // Normalize if needed
-    this->normalize(1000);
-
-    // Plot each distribution here, like the code for the separate distributions
+    gp.send1d(m_function_scan); 
+    gp.send1d(m_data); 
+    gp.send1d(m_samples); 
 
   }
-  
-  
 }
-  
