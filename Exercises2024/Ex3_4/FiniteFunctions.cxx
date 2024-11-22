@@ -266,6 +266,7 @@ void FiniteFunction::generatePlot(Gnuplot &gp){
     gp.send1d(m_samples);
     gp.send1d(m_data);
   }
+  
   else if (m_plotfunction==true && m_plotdatapoints==true){
     gp << "set terminal pngcairo\n";
     gp << "set output 'Outputs/png/"<<m_FunctionName<<".png'\n"; 
@@ -308,5 +309,26 @@ void FiniteFunction::generatePlot(Gnuplot &gp){
     gp << "plot '-' with points ps 2 lc rgb 'blue' title 'sampled data'\n";
     gp.send1d(m_samples);
   }
+  else if (m_plotfunction == true) {
+    gp << "set terminal pngcairo\n";
+    gp << "set output 'Outputs/png/" << m_FunctionName << "_separate.png'\n";
+    gp << "set xrange [" << m_RMin << ":" << m_RMax << "]\n";
+    gp << "set style line 1 lt 1 lw 2 pi 1 ps 0\n";
+    gp << "set title 'Separate Distributions'\n";
+
+    // Plot each distribution separately
+    gp << "plot '-' with lines ls 1 title 'invxsquared', "
+       "'-' with lines ls 2 title 'Normal Distribution', "
+       "'-' with lines ls 3 title 'Cauchy-Lorentz', "
+       "'-' with lines ls 4 title 'Negative Crystal Ball'\n";
+
+    // Normalize if needed
+    this->normalize(1000);
+
+    // Plot each distribution here, like the code for the separate distributions
+
+  }
+  
+  
 }
   

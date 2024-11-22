@@ -66,9 +66,9 @@ int main() {
     // If the data was successfully read, plot it
     if (!mysteryData.empty()) {
         // Plot the mystery data points
-        func.plotData(mysteryData, 150);  // Use 50 bins for histogram-like plotting
+        func.plotData(mysteryData, 50);  // Use 50 bins for histogram-like plotting
     
     }
-
+    
     return 0;
 }

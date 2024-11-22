@@ -18,12 +18,14 @@ public:
   void setRangeMax(double RMax);
   void setOutfile(std::string outfile);
   void plotFunction(); //Plot the function using scanFunction
+  //void generatePlot(Gnuplot &gp); 
   
   //Plot the supplied data points (either provided data or points sampled from function) as a histogram using NBins
   void plotData(std::vector<double> &points, int NBins, bool isdata=true); //NB! use isdata flag to pick between data and sampled distributions
   virtual void printInfo(); //Dump parameter info about the current function (Overridable)
   virtual double callFunction(double x); //Call the function with value x (Overridable)
  void normalize(int Ndiv); // Declare the normalize method
+
   //Protected members can be accessed by child classes but not users
 public:
   double m_RMin;
