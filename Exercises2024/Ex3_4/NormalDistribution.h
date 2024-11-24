@@ -1,5 +1,8 @@
-#ifndef NORMALDISTRIBUTION_H
-#define NORMALDISTRIBUTION_H
+//#ifndef NORMALDISTRIBUTION_H
+//#define NORMALDISTRIBUTION_H
+#pragma once
+
+
 
 #include <string>
 #include "FiniteFunctions.h"
@@ -11,10 +14,12 @@ private:
 
 public:
     // Constructor with range and output file, mean, and standard deviation
-    NormalDistribution(double range_min, double range_max, std::string outfile, double mean = 0.0, double stddev = 1.0);
+    NormalDistribution(
+        double range_min, double range_max, std::string outfile, double mean = 0.0, double stddev = 1.0);
 
     // Override the callFunction method
-    double callFunction(double x) override;
+    //double callFunction(double x) override;
+    double evaluate(double x) const;
 
     // Optional: Provide methods to set/get mean and standard deviation
     void setMean(double mean);
@@ -23,4 +28,4 @@ public:
     double getStdDev() const;
 };
 
-#endif // NORMALDISTRIBUTION_H
+//#endif // NORMALDISTRIBUTION_H

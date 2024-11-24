@@ -1,7 +1,13 @@
-//Name: Quratulain Zahoor
-//Date: 19-Nov-2024
 
-#pragma once
+
+
+#include "NormalDistribution.h"
+#include "NegativeCrystalBallDistribution.h"
+#include "CauchyLorentzDistribution.h"
+
+// Name: Quratulain Zahoor
+// Date: 19-Nov-2024
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -47,71 +53,30 @@ vector<double> readDataFromFile(const string& filename) {
 
     return data;
 }
-double callFunction(FiniteFunction* func, double x) {
-    return func->evaluate(x);
-}
 
-
-    //return 0;
-    int main() {
-    NormalDistribution normal(0.0, 1.0);  // Mean=0, Sigma=1
-    CauchyLorentzDistribution cauchy(0.0, 1.0);  // x0=0, gamma=1
-    NegativeCrystalBallDistribution crystal(0.0, 1.0, 1.5, 3.0);  // mean=0, sigma=1, alpha=1.5, n=3
-
-    // Using callFunction to evaluate at x = 0.5 for all distributions
-    std::cout << "Normal Distribution result: " << callFunction(&normal, 0.5) << std::endl;
-    std::cout << "Cauchy-Lorentz Distribution result: " << callFunction(&cauchy, 0.5) << std::endl;
-    std::cout << "Negative Crystal Ball Distribution result: " << callFunction(&crystal, 0.5) << std::endl;
-    
-    
-    // Define the range_min, range_max, and output_file variables
-    double range_min = -10.0;
-    double range_max = 10.0;
-    string output_file = "output.txt";
-
-    // Create a FiniteFunction object (or remove if unnecessary)
-    //FiniteFunction func(range_min, range_max, output_file);
-
-    // Plot the function f(x) = 1 / (1 + x^2)
-    func.plotFunction();
-    //func->plotSeparateDistributions();
-    //func.plotSeparateDistributions();
-
-
-    // Read the mystery data points from the file
-    string filename = "Outputs/data/MysteryData01202.txt";  // Use the correct relative file path
-    vector<double> mysteryData = readDataFromFile(filename);   
-
-    return 0;
-}
-/*
 int main() {
-       
-    FiniteFunction* normal =  NormalDistribution(0.0, 1.0);  // Standard normal
-    FiniteFunction* cauchy =  CauchyLorentzDistribution(0.0, 1.0);  // Cauchy at x=0, γ=1
-    FiniteFunction* crystal =  NegativeCrystalBallDistribution(-1.0, 2.0, 1.5, 3.0);  // Negative Crystal Ball
+    // Define the range for the function and output file
+    double range_min = -20.0;
+    double range_max = 20.0;
+    string output_file = "MysteryPlot";
 
-    double x = 0.5; // Example value for evaluation
-
-    // Now you can call evaluate on the base pointer
-    std::cout << "Normal f(x): " << normal->evaluate(x) << std::endl;
-    std::cout << "Cauchy f(x): " << cauchy->evaluate(x) << std::endl;
-    std::cout << "Crystal f(x): " << crystal->evaluate(x) << std::endl;
-
-    //delete normal;
-    //delete cauchy;
-    //delete crystal;
-
-    // Create a FiniteFunction object
+    // Corrected constructor call (using range_min and range_max)
     FiniteFunction func(range_min, range_max, output_file);
 
     // Plot the function f(x) = 1 / (1 + x^2)
     func.plotFunction();
-    func. plotSeparateDistributions();
 
     // Read the mystery data points from the file
     string filename = "Outputs/data/MysteryData01202.txt";  // Use the correct relative file path
-    vector<double> mysteryData = readDataFromFile(filename);   
-    return 0;
+    vector<double> mysteryData = readDataFromFile(filename);
+
+    // If the data was successfully read, plot it
+    if (!mysteryData.empty()) {
+        // Plot the mystery data points
+        func.plotData(mysteryData, 100, true);  // Use 50 bins for histogram-like plotting, setting 'true' for data
+    }
+
+    return 0;  // Return 0 to indicate successful execution
 }
-*/
+
+
