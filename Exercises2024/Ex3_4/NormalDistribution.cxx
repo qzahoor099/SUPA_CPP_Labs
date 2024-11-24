@@ -1,9 +1,11 @@
 #include "NormalDistribution.h"
-#include <cmath>   // For M_PI, exp, sqrt
+#include <cmath>
+#include <fstream>
+#include <iostream>
 
 // Constructor
-NormalDistribution::NormalDistribution(double range_min, double range_max, std::string outfile, double mean, double stddev)
-    : FiniteFunction(range_min, range_max, outfile), m_mean(mean), m_stddev(stddev) {}
+NormalDistribution::NormalDistribution(double range_min, double range_max, std::string outfile, double mean, double stddev, double step_size)
+    : FiniteFunction(range_min, range_max, outfile), m_mean(mean), m_stddev(stddev), m_step_size(step_size) {}
 
 // Override the callFunction method to implement the Normal Distribution formula
 double NormalDistribution::callFunction(double x) {
@@ -12,9 +14,27 @@ double NormalDistribution::callFunction(double x) {
     return normalizationFactor * exp(exponent);
 }
 
-// Setters and getters for mean and standard deviation
+// Method to generate plot data for the normal distribution
+void NormalDistribution::plotFunction() {
+    std::ofstream file("NormalDistribution.txt");
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not create the file.\n";
+        return;
+    }
+
+    for (double x = -20.0; x <= 20.0; x += m_step_size) {
+        double y = callFunction(x);
+        file << x << " " << y << "\n";
+        
+    }
+
+    file.close();
+    std::cout << "Data generated and written to 'NormalDistribution.txt'.\n";
+}
+
+// Setters and Getters
 void NormalDistribution::setMean(double mean) { m_mean = mean; }
 void NormalDistribution::setStdDev(double stddev) { m_stddev = stddev; }
-
 double NormalDistribution::getMean() const { return m_mean; }
 double NormalDistribution::getStdDev() const { return m_stddev; }
+

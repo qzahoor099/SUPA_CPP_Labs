@@ -65,8 +65,25 @@ int main() {
 
     // Plot the function f(x) = 1 / (1 + x^2)
     func.plotFunction();
+    //now this if for normal distribution 
+    double mean = 0.0;
+    double stddev = 1.0;
+    NormalDistribution normalDist(range_min, range_max, output_file, mean, stddev);
+
+    // Now plot the data using gnuplot
+    normalDist.plotFunction();
+    // Plot using Gnuplot
+    //std::string gnuplotCommand = "gnuplot -e \"plot 'NormalDistribution.txt' with lines title 'Normal Distribution'\"";
+    //system(gnuplotCommand.c_str());  // This executes the Gnuplot command
+
+
+    
+
+    //std::cout << "Data has been generated to " << outfile << ". Use plotting software to visualize it.\n";
+
 
     // Read the mystery data points from the file
+    //string filename= NormalDistribution.txt // this is my generated file 
     string filename = "Outputs/data/MysteryData01202.txt";  // Use the correct relative file path
     vector<double> mysteryData = readDataFromFile(filename);
 
