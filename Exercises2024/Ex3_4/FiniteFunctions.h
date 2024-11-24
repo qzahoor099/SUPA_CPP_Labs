@@ -1,86 +1,51 @@
-#include <string>
-#include <vector>
-#include "gnuplot-iostream.h"
+#include "FiniteFunctions.h"
+#include <cmath>
+#include <iostream>
 
-#pragma once //Replacement for IFNDEF
+// Base class constructor
+FiniteFunction::FiniteFunction() 
+    : m_RMin(0), m_RMax(0), m_Integral(0) {}
 
-class FiniteFunction {
-public:
-    FiniteFunction(); // Empty constructor
-    FiniteFunction(double range_min, double range_max, std::string outfile); // Variable constructor
-    virtual ~FiniteFunction() {}  // Virtual destructor
+FiniteFunction::FiniteFunction(double range_min, double range_max, std::string outfile)
+    : m_RMin(range_min), m_RMax(range_max), m_OutData(outfile), m_Integral(0) {}
 
-    // Pure virtual function that must be implemented by derived classes
-    virtual double evaluate(double x) const = 0;
+FiniteFunction::~FiniteFunction() {} // Virtual destructor
 
-    double rangeMin(); // Low end of the range the function is defined within
-    double rangeMax(); // High end of the range the function is defined within
-    double integral(int Ndiv = 1000);
-    std::vector<std::pair<double, double>> scanFunction(int Nscan = 1000); // Scan over function to plot it (slight hack needed to plot function in gnuplot)
-    void setRangeMin(double RMin);
-    void setRangeMax(double RMax);
-    void setOutfile(std::string outfile);
-    void plotFunction(); // Plot the function using scanFunction
-    void plotSeparateDistributions();
-    void plotData(std::vector<double>& points, int NBins, bool isdata = true); // Plot data points (either provided data or points sampled from function) as a histogram using NBins
-    virtual void printInfo(); // Dump parameter info about the current function (Overridable)
-    virtual double callFunction(double x); // Call the function with value x (Overridable)
-    void normalize(int Ndiv); // Declare the normalize method
+// Getter and setter methods
+double FiniteFunction::rangeMin() { return m_RMin; }
+double FiniteFunction::rangeMax() { return m_RMax; }
+void FiniteFunction::setRangeMin(double RMin) { m_RMin = RMin; }
+void FiniteFunction::setRangeMax(double RMax) { m_RMax = RMax; }
+void FiniteFunction::setOutfile(std::string outfile) { m_OutData = outfile; }
 
-public:
-    double m_RMin;
-    double m_RMax;
-    double m_Integral;
-    double m_NormalizationFactor = 1.0;
-    int m_IntDiv = 0; // Number of divisions for performing the integral
-    std::string m_FunctionName;
-    std::string m_OutData; // Output filename for data
-    std::string m_OutPng; // Output filename for plot
-    std::vector<std::pair<double, double>> m_data; // Input data points to plot
-    std::vector<std::pair<double, double>> m_samples; // Holder for randomly sampled data 
-    std::vector<std::pair<double, double>> m_function_scan; // Holder for data from scanFunction (slight hack needed to plot function in gnuplot)
-    bool m_plotfunction = true; // Flag to determine whether to plot function
-    bool m_plotdatapoints = true; // Flag to determine whether to plot input data
-    bool m_plotsamplepoints = false; // Flag to determine whether to plot sampled data 
-    double integrate(int Ndiv);
-    std::vector<std::pair<double, double>> makeHist(std::vector<double>& points, int Nbins); // Helper function to turn data points into histogram with Nbins
-    void checkPath(std::string outstring); // Helper function to ensure data and png paths are correct
-    void generatePlot(Gnuplot& gp); 
-  
-public:
-    double invxsquared(double x); // The default functional form
-};
+// Normal distribution constructor and method
+NormalDistribution::NormalDistribution(double mean, double sigma)
+    : FiniteFunction(-10.0, 10.0, "normal_distribution_output.txt"), m_mean(mean), m_sigma(sigma) {}
 
-// Distribution classes
+double NormalDistribution::evaluate(double x) const {
+    return (1.0 / (m_sigma * sqrt(2 * M_PI))) * exp(-0.5 * pow((x - m_mean) / m_sigma, 2));
+}
 
-class NormalDistribution : public FiniteFunction {
-public:
-    NormalDistribution(double mean, double sigma);
-    double evaluate(double x) const override;  // Override evaluate
+// Cauchy-Lorentz distribution constructor and method
+CauchyLorentzDistribution::CauchyLorentzDistribution(double x0, double gamma)
+    : FiniteFunction(-10.0, 10.0, "cauchy_lorentz_output.txt"), m_x0(x0), m_gamma(gamma) {}
 
-private:
-    double m_mean;
-    double m_sigma;
-};
+double CauchyLorentzDistribution::evaluate(double x) const {
+    return (1.0 / M_PI) * (m_gamma / ((x - m_x0) * (x - m_x0) + m_gamma * m_gamma));
+}
 
-class CauchyLorentzDistribution : public FiniteFunction {
-public:
-    CauchyLorentzDistribution(double x0, double gamma);
-    double evaluate(double x) const override;  // Override evaluate
+// Negative Crystal Ball distribution constructor and method
+NegativeCrystalBallDistribution::NegativeCrystalBallDistribution(double mean, double sigma, double alpha, double n)
+    : FiniteFunction(-10.0, 10.0, "negative_crystal_ball_output.txt"),
+      m_mean(mean), m_sigma(sigma), m_alpha(alpha), m_n(n) {}
 
-private:
-    double m_x0;
-    double m_gamma;
-};
-
-class NegativeCrystalBallDistribution : public FiniteFunction {
-public:
-    NegativeCrystalBallDistribution(double mean, double sigma, double alpha, double n);
-    double evaluate(double x) const override;  // Override evaluate
-
-private:
-    double m_mean;
-    double m_sigma;
-    double m_alpha;
-    double m_n;
-};
+double NegativeCrystalBallDistribution::evaluate(double x) const {
+    double z = (x - m_mean) / m_sigma;
+    if (z > -m_alpha) {
+        return exp(-0.5 * z * z);  // Gaussian part
+    } else {
+        double A = pow(m_n / m_alpha, m_n) * exp(-0.5 * m_alpha * m_alpha);
+        double B = m_n / m_alpha - m_alpha;
+        return A * pow(B - z, -m_n);  // Tail part
+    }
+}

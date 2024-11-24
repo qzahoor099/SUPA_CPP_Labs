@@ -21,3 +21,5 @@ clean: #No targets just run shell command to rm object files and emacs backups
 
 cleantarget: #Delete the exectuable
 	@rm -f ${TARGET}
+
+
