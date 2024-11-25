@@ -193,7 +193,7 @@ std::vector< std::pair<double,double> > FiniteFunction::scanFunction(int Nscan){
 }
 
 //Function to make histogram out of sampled x-values - use for input data and sampling
-std::vector< std::pair<double,double> > FiniteFunction::makeHist(std::vector<double> &points, int Nbins){
+std::vector< std::pair<double,double> > NormalDistribution::makeHist(std::vector<double> &points, int Nbins){
 
   std::vector< std::pair<double,double> > histdata; //Plottable output shape: (midpoint,frequency)
   std::vector<int> bins(Nbins,0); //vector of Nbins ints with default value 0 

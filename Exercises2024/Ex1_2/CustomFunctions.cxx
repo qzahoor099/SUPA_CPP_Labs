@@ -21,7 +21,7 @@ void readData(const std::string& filename, std::vector<std::pair<float, float>>&
         return;
     }
     std::string line;
-    bool isHeader = true; // skip the header to avoid any problem later
+    bool isHeader = true; // skiping the header to avoid any problem later
 
     while (std::getline(inputFile, line)) {
         if (isHeader) {
@@ -55,7 +55,7 @@ void readData(const std::string& filename, std::vector<std::pair<float, float>>&
 }
 
 
-// defining the function to calculate the magnitude m = sqrt(a^2=b^2)
+// defining the function to calculate the magnitude m = sqrt(a^2+b^2)
 std::vector<float> calculateMagnitudes(const std::vector<std::pair<float, float>>& data) {
     std::vector<float> magnitudes;
     for (const auto& point : data) {
@@ -87,7 +87,7 @@ void writeToFile(const std::string& filename, const std::vector<float>& magnitud
     std::cout << "Magnitudes saved to " << filename << "\n";
 }
 
-// Function to perform least squares line fit and calculate χ²/NDF
+// calculating the slope 
 void fitLine(const std::vector<std::pair<float, float>>& data, const std::string& filename) {
     int N = data.size();
     if (N < 2) {
@@ -107,7 +107,7 @@ void fitLine(const std::vector<std::pair<float, float>>& data, const std::string
     float m = (N * sumXY - sumX * sumY) / (N * sumX2 - sumX * sumX);
     float c = (sumY - m * sumX) / N;
 
-    // using the error file defined inside the AnalyseData.cxx , calculating the chi 
+    // using the error file defined inside the AnalyseData.cxx , calculating the chi functions
     std::vector<float> errors(data.size(), 1.0);  
 
     double chiSquared = calculateChiSquared(data, m, c, errors);
@@ -143,6 +143,21 @@ double calculateChiSquared(const std::vector<std::pair<float, float>>& data, dou
 }
 
 // calculating x^y
+double calculatePowerManually(float base, int exponent) {
+    if (exponent == 0) return 1.0;
+    double result = 1.0;
+    bool isNegative = exponent < 0;
+
+    if (isNegative) exponent = -exponent;
+
+    for (int i = 0; i < exponent; ++i) {
+        result *= base;
+    }
+
+    return isNegative ? 1.0 / result : result;
+}
+
+// Function to calculate power for a list of data points
 void calculatePower(const std::vector<std::pair<float, float>>& data, const std::string& filename) {
     std::ofstream outFile(filename);
     if (!outFile.is_open()) {
@@ -151,8 +166,8 @@ void calculatePower(const std::vector<std::pair<float, float>>& data, const std:
     }
 
     for (const auto& point : data) {
-        int y = static_cast<int>(std::round(point.second));  // Round y to nearest integer
-        double result = std::pow(point.first, y);
+        int y = static_cast<int>(std::round(point.second));
+        double result = calculatePowerManually(point.first, y);
         outFile << point.first << "^" << y << " = " << result << "\n";
         std::cout << point.first << "^" << y << " = " << result << "\n";
     }
@@ -160,6 +175,8 @@ void calculatePower(const std::vector<std::pair<float, float>>& data, const std:
     outFile.close();
     std::cout << "x^y results saved to " << filename << "\n";
 }
+
+
 // you can see my outfile in my folder, for easiness i have defines my Makefile
 //do the make
 //now you have the filename.txt (for the differnt option you want to calculate)
