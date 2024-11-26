@@ -1,4 +1,8 @@
 #include "NegativeCrystalBallDistribution.h"
+#include <cmath>
+#include <fstream>
+#include <iostream>
+
 
 // Constructor
 NegativeCrystalBallDistribution::NegativeCrystalBallDistribution(double range_min, double range_max, std::string outfile,
@@ -59,7 +63,7 @@ void NegativeCrystalBallDistribution::plotFunction() {
     file.close();
         std::cout << "Data generated and written to 'NegitiveCrystalBallDistribution.txt'.\n";
 
-    //std::cout << "Data generated and written to '" << outfile << "'.\n";
+
 }
 
 // Setters

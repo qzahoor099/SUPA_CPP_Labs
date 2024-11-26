@@ -81,12 +81,12 @@ int main() {
     double n = 2.0;       // Tail parameter
     double step_size = 1;
 
-
-    // Create the Negative Crystal Ball Distribution object
+//create the Negative Crystal Ball Distribution object
     NegativeCrystalBallDistribution ncbdDist(range_min, range_max, output_file, x_bar, sigma, alpha, n, step_size);
 
     // Generate and plot the function data
     ncbdDist.plotFunction();
+    
     
      
     
