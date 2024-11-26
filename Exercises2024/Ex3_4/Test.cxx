@@ -1,6 +1,4 @@
 
-
-
 #include "NormalDistribution.h"
 #include "NegativeCrystalBallDistribution.h"
 #include "CauchyLorentzDistribution.h"
@@ -71,19 +69,26 @@ int main() {
     NormalDistribution normalDist(range_min, range_max, output_file, mean, stddev);
 
     // Now plot the data using gnuplot
-    normalDist.plotFunction();
-    // Plot using Gnuplot
-    //std::string gnuplotCommand = "gnuplot -e \"plot 'NormalDistribution.txt' with lines title 'Normal Distribution'\"";
-    //system(gnuplotCommand.c_str());  // This executes the Gnuplot command
+    //normalDist.plotFunction();
+    // now define for NegitiveCrystalBallDistribution
+    // double range_min = -5.0;
+    //double range_max = 5.0;
+    std::string outfile = "Outputs/data/NegativeCrystalBallDistribution.txt";
+    double x_bar = 0.0;   // Mean
+    double sigma = 1.0;   // Standard deviation
+    double alpha = 1.5;   // Transition parameter
+    double n = 2.0;       // Tail parameter
+    double step_size = 0.1;
 
+        // Create the Negative Crystal Ball Distribution object
+        NegativeCrystalBallDistribution ncbd(range_min, range_max, output_file, x_bar, sigma, alpha, n, step_size);
 
+        // Generate and plot the function data
+        ncbd.plotFunction();
     
-
+     
     //std::cout << "Data has been generated to " << outfile << ". Use plotting software to visualize it.\n";
 
-
-    // Read the mystery data points from the file
-    //string filename= NormalDistribution.txt // this is my generated file 
     string filename = "Outputs/data/MysteryData01202.txt";  // Use the correct relative file path
     vector<double> mysteryData = readDataFromFile(filename);
 

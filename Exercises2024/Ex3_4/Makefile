@@ -1,16 +1,15 @@
-CC = g++ # Name of compiler
-FLAGS = -std=c++20 -w # Compiler flags (the s makes it silent)
-TARGET = Test # Executable name
-OBJECTS = Test.o FiniteFunctions.o NormalDistribution.o
-LIBS = -I ../../GNUplot/ -lboost_iostreams
-
-# First target in Makefile is default
-${TARGET}: ${OBJECTS} # Make target from objects
+CC = g++               # Compiler
+FLAGS = -std=c++20     # Compiler flags
+TARGET = Test          # Output binary
+OBJECTS = Test.o FiniteFunctions.o NormalDistribution.o NegativeCrystalBallDistribution.o
+INCLUDES = -I ../../GNUplot/ 
+LIBS = -lboost_iostreams
+${TARGET}: ${OBJECTS}
 	@echo "Linking..."
 	${CC} ${FLAGS} ${OBJECTS} ${LIBS} -o ${TARGET}
 	@make clean
 
-Test.o: Test.cxx FiniteFunctions.h NormalDistribution.h
+Test.o: Test.cxx FiniteFunctions.h NormalDistribution.h NegativeCrystalBallDistribution.h
 	${CC} ${FLAGS} ${LIBS} -c Test.cxx
 
 FiniteFunctions.o: FiniteFunctions.cxx FiniteFunctions.h
@@ -19,8 +18,11 @@ FiniteFunctions.o: FiniteFunctions.cxx FiniteFunctions.h
 NormalDistribution.o: NormalDistribution.cxx NormalDistribution.h
 	${CC} ${FLAGS} ${LIBS} -c NormalDistribution.cxx
 
-clean: # No targets just run shell command to remove object files and emacs backups
+NegativeCrystalBallDistribution.o: NegativeCrystalBallDistribution.cxx NegativeCrystalBallDistribution.h
+	${CC} ${FLAGS} ${LIBS} -c NegativeCrystalBallDistribution.cxx
+
+clean:
 	@rm -f *.o *~
 
-cleantarget: # Delete the executable
+cleantarget:
 	@rm -f ${TARGET}

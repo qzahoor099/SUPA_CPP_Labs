@@ -114,7 +114,10 @@ std::vector< std::pair<double, double> > FiniteFunction::scanFunction(int Nscan)
 
     return function_scan;
 }
+
 */
+
+
 
 /*
 ###################
@@ -146,8 +149,7 @@ void FiniteFunction::printInfo(){
 //Hack because gnuplot-io can't read in custom functions, just scan over function and connect points with a line... 
 void FiniteFunction::plotFunction(){
   m_function_scan = this->scanFunction(10000);
-  m_plotfunction = true; //already handling the normalzation
-  
+  m_plotfunction = true;
 }
 
 //Transform data points into a format gnuplot can use (histogram) and set flag to enable drawing of data to output plot
@@ -193,7 +195,7 @@ std::vector< std::pair<double,double> > FiniteFunction::scanFunction(int Nscan){
 }
 
 //Function to make histogram out of sampled x-values - use for input data and sampling
-std::vector< std::pair<double,double> > NormalDistribution::makeHist(std::vector<double> &points, int Nbins){
+std::vector< std::pair<double,double> > FiniteFunction::makeHist(std::vector<double> &points, int Nbins){
 
   std::vector< std::pair<double,double> > histdata; //Plottable output shape: (midpoint,frequency)
   std::vector<int> bins(Nbins,0); //vector of Nbins ints with default value 0 
@@ -274,3 +276,5 @@ void FiniteFunction::generatePlot(Gnuplot &gp){
     gp.send1d(m_samples);
   }
 }
+
+
