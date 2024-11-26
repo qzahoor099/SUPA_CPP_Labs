@@ -12,13 +12,11 @@ private:
     double m_alpha;   // Transition parameter
     double m_n;       // Tail parameter
     double m_step_size;
-
-    // Precomputed constants
-    double A, B, N, C, D;
-
-    // Compute constants
+    double m_range_min;
+    double m_range_max;
+    
     void computeConstants();
-
+    double A, B, C, D, N;
 public:
     // Constructor
     NegativeCrystalBallDistribution(double range_min, double range_max, std::string outfile,
@@ -28,7 +26,10 @@ public:
     double callFunction(double x) override;
 
     // Method to generate plot data
-    void plotFunction() ;
+    //void NegativeCrystalBallDistribution::computeConstants();
+    //void plotFunction() ;
+    void plotFunction();
+    void plotData(std::vector<double> &points, int NBins, bool isdata=true);
 
     // Setters and Getters
     void setXBar(double x_bar);

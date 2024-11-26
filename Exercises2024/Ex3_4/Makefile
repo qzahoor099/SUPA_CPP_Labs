@@ -2,8 +2,9 @@ CC = g++               # Compiler
 FLAGS = -std=c++20     # Compiler flags
 TARGET = Test          # Output binary
 OBJECTS = Test.o FiniteFunctions.o NormalDistribution.o NegativeCrystalBallDistribution.o
-INCLUDES = -I ../../GNUplot/ 
-LIBS = -lboost_iostreams
+LIBS=-I ../../GNUplot/ -lboost_iostreams
+#INCLUDES = -I ../../GNUplot
+#LIBS = -lboost_iostreams
 ${TARGET}: ${OBJECTS}
 	@echo "Linking..."
 	${CC} ${FLAGS} ${OBJECTS} ${LIBS} -o ${TARGET}
