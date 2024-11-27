@@ -38,12 +38,12 @@ double NegativeCrystalBallDistribution::callFunction(double x) {
         return N * A * std::pow(B - z, -m_n);
     }
 }
-
+/*
 double range_min= -20.0;
 double range_max = 20.0;
 double step_size= 0.1;
 // Generate plot data
-/*
+
 void NegativeCrystalBallDistribution::plotFunction() {
     std::ofstream file("Outputs/data/NegitiveCrystalBallDistribution.txt");
     if (!file.is_open()) {
