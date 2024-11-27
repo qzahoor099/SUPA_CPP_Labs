@@ -43,6 +43,7 @@ double range_min= -20.0;
 double range_max = 20.0;
 double step_size= 0.1;
 // Generate plot data
+/*
 void NegativeCrystalBallDistribution::plotFunction() {
     std::ofstream file("Outputs/data/NegitiveCrystalBallDistribution.txt");
     if (!file.is_open()) {
@@ -65,7 +66,7 @@ void NegativeCrystalBallDistribution::plotFunction() {
 
 
 }
-
+*/
 // Setters
 void NegativeCrystalBallDistribution::setXBar(double x_bar) { m_x_bar = x_bar; computeConstants(); }
 void NegativeCrystalBallDistribution::setSigma(double sigma) { m_sigma = sigma; computeConstants(); }

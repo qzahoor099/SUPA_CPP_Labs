@@ -1,26 +1,29 @@
-//#ifndef CAUCHYLORENTZDISTRIBUTION_H
-//#define CAUCHYLORENTZDISTRIBUTION_H
 #pragma once
-// Contents of FiniteFunctions.h
+#include "FiniteFunctions.h"
+#include <string>
 
-
-#include "FiniteFunctions.h"  // Include the base class
-#include <cmath>             // For M_PI and pow
-#include <stdexcept>         // For exception handling
-
-// Class for Cauchy-Lorentz Distribution, derived from FiniteFunction
 class CauchyLorentzDistribution : public FiniteFunction {
 private:
-    double x0;      // Location parameter (x0)
-    double gamma;   // Scale parameter (gamma)
+    double m_x0;       // Location parameter
+    double m_gamma;    // Scale parameter
+    double m_step_size; // Step size for plotting
+    double m_range_min;
+    double m_range_max;
 
 public:
-    // Constructor: initializes parameters, throws exception if gamma <= 0
-    CauchyLorentzDistribution(double x0_, double gamma_);
+    // Constructor
+    CauchyLorentzDistribution(double range_min, double range_max, std::string outfile, double x0, double gamma, double step_size);
+    //~CauchyLorentzDistribution();
+    void plotFunction() ;
 
-    // Override the evaluate method to compute the PDF at a given x
-    //double evaluate(double x) const override;
-    double evaluate(double x) const;
+    // Override callFunction for the Cauchy-Lorentz formula
+    double callFunction(double x) override;
+
+    // Setters and Getters
+    void setLocation(double x0);
+    void setScale(double gamma);
+    double getLocation() const;
+    double getScale() const;
 };
 
 

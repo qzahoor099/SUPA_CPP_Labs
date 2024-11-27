@@ -28,8 +28,8 @@ public:
     // Method to generate plot data
     //void NegativeCrystalBallDistribution::computeConstants();
     //void plotFunction() ;
-    void plotFunction();
-    void plotData(std::vector<double> &points, int NBins, bool isdata=true);
+    //void plotFunction();
+    //void plotData(std::vector<double> &points, int NBins, bool isdata=true);
 
     // Setters and Getters
     void setXBar(double x_bar);

@@ -15,8 +15,8 @@ public:
         double range_min, double range_max, std::string outfile, double mean = 0.0, double stddev = 1.0, double step_size = 0.1);
         //NormalDistribution(double range_min, double range_max, std::string outfile, double mean, double stddev);
 
-        void plotFunction();
-        void plotData(std::vector<double> &points, int NBins, bool isdata=true); //NB! use isdata flag to pick between data and sampled distributions
+        //void plotFunction();
+        //void plotData(std::vector<double> &points, int NBins, bool isdata=true); //NB! use isdata flag to pick between data and sampled distributions
 
         //void NormalDistribution::plotFunction();
         //void NormalDistribution::plotData();

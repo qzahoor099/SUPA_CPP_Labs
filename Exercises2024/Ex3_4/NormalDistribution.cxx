@@ -15,14 +15,14 @@ double NormalDistribution::callFunction(double x) {
 }
 
 // Method to generate plot data for the normal distribution
-void NormalDistribution::plotFunction() {
-    std::ofstream file("Outputs/data/NormalDistribution.txt");
-    if (!file.is_open()) {
-        std::cerr << "Error: Could not create the file.\n";
-        return;
-    }
+//void NormalDistribution::plotFunction1() {
+  //  std::ofstream file("Outputs/data/NormalDistribution.txt");
+  //  if (!file.is_open()) {
+ //       std::cerr << "Error: Could not create the file.\n";
+  //      return;
+  //  }
 
-    for (double x = -20.0; x <= 20.0; x += m_step_size) {
+    /*for (double x = -20.0; x <= 20.0; x += m_step_size) {
         double y = callFunction(x);
         file << x << " " << y << "\n";
          m_function_scan = this->scanFunction(10000);
@@ -32,7 +32,7 @@ void NormalDistribution::plotFunction() {
     file.close();
     std::cout << "Data generated and written to 'NormalDistribution.txt'.\n";
 }
-
+*/
 // Setters and Getters
 void NormalDistribution::setMean(double mean) { m_mean = mean; }
 void NormalDistribution::setStdDev(double stddev) { m_stddev = stddev; }
