@@ -46,7 +46,7 @@ public:
   std::vector< std::pair<double,double> > m_function_scan; //holder for data from scanFunction (slight hack needed to plot function in gnuplot)
   bool m_plotfunction = true; //Flag to determine whether to plot function
   bool m_plotdatapoints = true; //Flag to determine whether to plot input data
-  bool m_plotsamplepoints = false; //Flag to determine whether to plot sampled data 
+  bool m_plotsamplepoints = true; //Flag to determine whether to plot sampled data 
   double integrate(int Ndiv);
   std::vector< std::pair<double, double> > makeHist(std::vector<double> &points, int Nbins); //Helper function to turn data points into histogram with Nbins
   void checkPath(std::string outstring); //Helper function to ensure data and png paths are correct

@@ -78,7 +78,7 @@ int main() {
     string filename1 = "Outputs/data/NormalDistribution.txt";  // Use the correct relative file path
     vector<double> mysteryData1 = readDataFromFile(filename1);
     if (!mysteryData1.empty()) {
-        func.plotData(mysteryData1, 100, false);  // Use 100 bins for histogram-like plotting, setting 'false' for data
+        func.plotData(mysteryData1, 100, true);  // Use 100 bins for histogram-like plotting, setting 'false' for data
     }
 
     // Cauchy-Lorentz Distribution
@@ -92,7 +92,7 @@ int main() {
     string filename4 = "Outputs/data/CauchyLorentzDistribution.txt";  // Use the correct relative file path
     vector<double> mysteryData4 = readDataFromFile(filename4);
     if (!mysteryData4.empty()) {
-        func.plotData(mysteryData4, 100, false);  // Use 100 bins for histogram-like plotting, setting 'false' for data
+        func.plotData(mysteryData4, 100, true);  // Use 100 bins for histogram-like plotting, setting 'false' for data
     }
 
     // Negative Crystal Ball Distribution
@@ -108,7 +108,9 @@ int main() {
     string filename2 = "Outputs/data/NegativeCrystalBallDistribution.txt";  // Use the correct relative file path
     vector<double> mysteryData2 = readDataFromFile(filename2);
     if (!mysteryData2.empty()) {
-        func.plotData(mysteryData2, 100, false);  // Use 100 bins for histogram-like plotting, setting 'false' for data
+        func.plotData(mysteryData2, 100, true);  // Use 100 bins for histogram-like plotting, setting 'false' for data
+        //func.plotSample(mysteryData2, 100, true);  // Use 100 bins for histogram-like plotting, setting 'false' for data
+
     }
 
     return 0;  // Return 0 to indicate successful execution
@@ -252,4 +254,4 @@ int main() {
 */
 
   //  return 0;  // Return 0 to indicate successful execution
-//}    string filename1 = "Outputs/data/NormalDistribution.txt";  // Use the correct relative file path
+//}   // Use the correct relative file path
