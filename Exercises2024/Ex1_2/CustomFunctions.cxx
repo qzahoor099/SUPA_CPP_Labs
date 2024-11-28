@@ -13,10 +13,10 @@
 #include <iomanip>
 #include <limits>
 
-// function to read the data into the vector 
+// function to read the data into the vector , in the right format
 void readData(const std::string& filename, std::vector<std::pair<float, float>>& data) {
     std::ifstream inputFile(filename);
-    if (!inputFile.is_open()) {
+    if (!inputFile.is_open()) { //checking if the file is open
         std::cerr << "Error: Could not open file '" << filename << "' for reading.\n";
         return;
     }
@@ -25,14 +25,14 @@ void readData(const std::string& filename, std::vector<std::pair<float, float>>&
 
     while (std::getline(inputFile, line)) {
         if (isHeader) {
-            isHeader = false; 
+            isHeader = false;   //skiping the header here
             continue;
         }
 
         std::istringstream iss(line);
         std::string xStr, yStr;
 
-        if (std::getline(iss, xStr, ',') && std::getline(iss, yStr)) {
+        if (std::getline(iss, xStr, ',') && std::getline(iss, yStr)) { //get line to get the line data
             try {
                 float x = std::stof(xStr);
                 float y = std::stof(yStr);

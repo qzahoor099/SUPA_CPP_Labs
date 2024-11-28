@@ -39,9 +39,9 @@ int main() {
 
      while (keepRunning) {   //list of my input options
          std::cout << "Choose an action:\n";
-        // std::cout << "Select an option:\n1. Print Data\n2. Calculate Magnitudes\nChoice: ";
+        
 
-         std::cout << "1. Print data\n";
+         std::cout << "1. Print data\n";  //you have to enter your choice in order to make it happens
          std::cout << "2. Calculate and print magnitudes\n";
          std::cout << "3. Perform least squares fit\n";
          std::cout << "4. Calculate x^y\n";
@@ -69,7 +69,7 @@ int main() {
                  fitLine(data, "fitted_function.txt"); //make the fit using the slope y=mx+c
                  break;
              case 4:
-                //void calculatePower(const std::vector<std::pair<float, float>>& data, const std::string& filename);
+            
 
                  calculatePower(data, "x_to_the_y.txt");  //calculating the power
                  break;
